@@ -200,32 +200,32 @@ for i in range(N):
 # print(sum(hits_score) / len(hits_score))
 with open('hits1.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
-    f.write(hits_score_1[i] + ',')
-  f.write('\n' + (sum(hits_score_1) / len(hits_score_1)))
+    f.write(str(hits_score_1[i]) + ',')
+  f.write('\n' + str((sum(hits_score_1) / len(hits_score_1))))
 with open('hits3.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
-    f.write(hits_score_3[i] + ',')
-  f.write('\n' + (sum(hits_score_3) / len(hits_score_3)))
+    f.write(str(hits_score_3[i]) + ',')
+  f.write('\n' + str((sum(hits_score_3) / len(hits_score_3))))
 with open('hits5.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
-    f.write(hits_score_5[i] + ',')
-  f.write('\n' + (sum(hits_score_5) / len(hits_score_5)))
+    f.write(str(hits_score_5[i]) + ',')
+  f.write('\n' + str((sum(hits_score_5) / len(hits_score_5))))
 with open('hits10.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
-    f.write(hits_score_10[i] + ',')
-  f.write('\n' + (sum(hits_score_10) / len(hits_score_10)))
+    f.write(str(hits_score_10[i]) + ',')
+  f.write('\n' + str((sum(hits_score_10) / len(hits_score_10))))
 with open('hits20.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
-    f.write(hits_score_20[i] + ',')
-  f.write('\n' + (sum(hits_score_20) / len(hits_score_20)))
+    f.write(str(hits_score_20[i]) + ',')
+  f.write('\n' + str((sum(hits_score_20) / len(hits_score_20))))
 with open('hits50.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
-    f.write(hits_score_50[i] + ',')
-  f.write('\n' + (sum(hits_score_50) / len(hits_score_50)))
+    f.write(str(hits_score_50[i]) + ',')
+  f.write('\n' + str((sum(hits_score_50) / len(hits_score_50))))
 with open('hits100.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
-    f.write(hits_score_100[i] + ',')
-  f.write('\n' + (sum(hits_score_100) / len(hits_score_100)))
+    f.write(str(hits_score_100[i]) + ',')
+  f.write('\n' + str((sum(hits_score_100) / len(hits_score_100))))
 # TECHNIQUES_LIST = [
 #     'bake',
 #     'barbecue',
