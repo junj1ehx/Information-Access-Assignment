@@ -1,13 +1,7 @@
-import numpy as np
 import csv
-import collections
 from math import sqrt
 
-# Load default preprocessed recipe data
-
-N = 1000
-
-HITS = 50
+N = 1000 # control number of users using in the experiment
 
 
 def load_foodDataset():
@@ -34,8 +28,6 @@ def load_foodDataset():
             simUsers[userId]['techniques'] = []
             for i in range(58):
                 simUsers[userId]['techniques'].append(int(temp_list[i]))
-            # simUsers[userId]['itemlist'] = items.strip('[').strip(']').split(', ')
-            # simUsers[userId]['ratinglist'] = ratings.strip('[').strip(']').split(', ')
             temp_itemlist = items.strip('[').strip(']').split(', ')
             temp_ratinglist = ratings.strip('[').strip(']').split(', ')
             temp_itemrating = {}
@@ -73,7 +65,7 @@ def sim_distance(prefs, p1, p2):
     sum_of_squares = sum([pow(p1_tech[item] - p2_tech[item], 2)
                           for item in range(len(p1_tech))])
 
-    return 1 / (1 + sqrt(sum_of_squares))
+    return sum_of_squares
 
 
 # Returns the Pearson correlation coefficient for p1 and p2
@@ -119,7 +111,7 @@ def topSimilarityPerson(prefs, person, similarity=sim_distance):
               for other in prefs if other != person]
     # Sort the list for all users so that the similarity appears in descending order of scores
     scores.sort()
-    # reverse (user, score) to (score, user)
+    # reverse the order
     scores.reverse()
     return scores
 
@@ -142,7 +134,6 @@ def calculateSimilarPersons(prefs):
 
 # Gets recommendations for a person by using every similar user's preference
 def getRecommendations(prefs, personsim, person):
-    totals = {}
     simSums = {}
     topPersonsim = dict(zip([user[1] for user in personsim[person]], [user[0] for user in personsim[person]]))
 
@@ -151,15 +142,9 @@ def getRecommendations(prefs, personsim, person):
             if topPersonsim[user] > 0:
                 simSums.setdefault(key, 0)
                 simSums[key] += topPersonsim[user]
-        # print(simSums)
-    # for item in simSums:
-    #   # print(item)
-    #   totals.setdefault(item, 0)
-    #   totals[item] += simSums[item]
 
     # Create the normalized list
     rankings = [(total, item) for item, total in simSums.items()]
-    # print(rankings)
     # Return the sorted list
     rankings.sort()
     rankings.reverse()
@@ -177,7 +162,6 @@ def hits_eval(itemList, rankedlist, count):
 
 
 simUsers = load_foodDataset()
-# print(list(simUsers['3']['item_rating'].keys()))
 personsim = calculateSimilarPersons(simUsers)
 
 hits_score_1 = []
@@ -188,7 +172,6 @@ hits_score_20 = []
 hits_score_50 = []
 hits_score_100 = []
 
-# print(hits_eval(getRecommendations(simUsers, personsim, '0'), list(simUsers['0']['item_rating'].keys()), HITS))
 for i in range(N):
   itemlist = getRecommendations(simUsers, personsim, str(i))
   hits_score_1.append(
@@ -207,93 +190,33 @@ for i in range(N):
     hits_eval(itemlist, list(simUsers[str(i)]['item_rating'].keys()), 100))
   print('%d / %d calculated' % (i, N))
 
-# print(hits_score)
-# print(sum(hits_score) / len(hits_score))
-with open('hits1.txt', 'w', encoding='utf-8') as f:
+
+with open('ehits1.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
     f.write(str(hits_score_1[i]) + ',')
   f.write('\n' + str((sum(hits_score_1) / len(hits_score_1))))
-with open('hits3.txt', 'w', encoding='utf-8') as f:
+with open('ehits3.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
     f.write(str(hits_score_3[i]) + ',')
   f.write('\n' + str((sum(hits_score_3) / len(hits_score_3))))
-with open('hits5.txt', 'w', encoding='utf-8') as f:
+with open('ehits5.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
     f.write(str(hits_score_5[i]) + ',')
   f.write('\n' + str((sum(hits_score_5) / len(hits_score_5))))
-with open('hits10.txt', 'w', encoding='utf-8') as f:
+with open('ehits10.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
     f.write(str(hits_score_10[i]) + ',')
   f.write('\n' + str((sum(hits_score_10) / len(hits_score_10))))
-with open('hits20.txt', 'w', encoding='utf-8') as f:
+with open('ehits20.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
     f.write(str(hits_score_20[i]) + ',')
   f.write('\n' + str((sum(hits_score_20) / len(hits_score_20))))
-with open('hits50.txt', 'w', encoding='utf-8') as f:
+with open('ehits50.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
     f.write(str(hits_score_50[i]) + ',')
   f.write('\n' + str((sum(hits_score_50) / len(hits_score_50))))
-with open('hits100.txt', 'w', encoding='utf-8') as f:
+with open('ehits100.txt', 'w', encoding='utf-8') as f:
   for i in range(N):
     f.write(str(hits_score_100[i]) + ',')
   f.write('\n' + str((sum(hits_score_100) / len(hits_score_100))))
-# TECHNIQUES_LIST = [
-#     'bake',
-#     'barbecue',
-#     'blanch',
-#     'blend',
-#     'boil',
-#     'braise',
-#     'brine',
-#     'broil',
-#     'caramelize',
-#     'combine',
-#     'crock pot',
-#     'crush',
-#     'deglaze',
-#     'devein',
-#     'dice',
-#     'distill',
-#     'drain',
-#     'emulsify',
-#     'ferment',
-#     'freez',
-#     'fry',
-#     'grate',
-#     'griddle',
-#     'grill',
-#     'knead',
-#     'leaven',
-#     'marinate',
-#     'mash',
-#     'melt',
-#     'microwave',
-#     'parboil',
-#     'pickle',
-#     'poach',
-#     'pour',
-#     'pressure cook',
-#     'puree',
-#     'refrigerat',
-#     'roast',
-#     'saute',
-#     'scald',
-#     'scramble',
-#     'shred',
-#     'simmer',
-#     'skillet',
-#     'slow cook',
-#     'smoke',
-#     'smooth',
-#     'soak',
-#     'sous-vide',
-#     'steam',
-#     'stew',
-#     'strain',
-#     'tenderize',
-#     'thicken',
-#     'toast',
-#     'toss',
-#     'whip',
-#     'whisk',
-# ]
+
