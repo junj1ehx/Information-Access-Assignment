@@ -5,7 +5,7 @@ from math import sqrt
 
 # Load default preprocessed recipe data
 
-N = 100
+N = 1000
 
 HITS = 50
 
@@ -46,21 +46,32 @@ def load_foodDataset():
 
     return simUsers
 
+def sim_cosine(prefs, p1, p2):
+    p1_tech = prefs[p1]['techniques']
+    p2_tech = prefs[p2]['techniques']
+
+    sum_of_squares_p1 = sum([pow(p1_tech[item], 2)
+                          for item in range(len(p1_tech))])
+    sum_of_squares_p2 = sum([pow(p2_tech[item], 2)
+                             for item in range(len(p2_tech))])
+    sum_of_squares = sum([p1_tech[item] * p2_tech[item]
+                          for item in range(len(p1_tech))])
+    denominator = sqrt(sum_of_squares_p1 * sum_of_squares_p2)
+    try:
+        value = sum_of_squares / denominator
+    except ZeroDivisionError:
+        value = 0
+    return value
 
 # Returns a distance-based similarity score for person1 and person2
-def sim_distance(prefs, person1, person2):
+def sim_distance(prefs, p1, p2):
     # Get the list of shared_items
-    si = {}
-    for item in prefs[person1]:
-        if item in prefs[person2]:
-            si[item] = 1
-
-    # if they have no ratings in common, return 0
-    if len(si) == 0: return 0
+    p1_tech = prefs[p1]['techniques']
+    p2_tech = prefs[p2]['techniques']
 
     # Add up the squares of all the differences
-    sum_of_squares = sum([pow(prefs[person1][item] - prefs[person2][item], 2)
-                          for item in si])
+    sum_of_squares = sum([pow(p1_tech[item] - p2_tech[item], 2)
+                          for item in range(len(p1_tech))])
 
     return 1 / (1 + sqrt(sum_of_squares))
 
@@ -102,7 +113,7 @@ def sim_pearson(prefs, p1, p2):
     return r
 
 
-def topSimilarityPerson(prefs, person, similarity=sim_pearson):
+def topSimilarityPerson(prefs, person, similarity=sim_distance):
     # return a list of Pearson scores between person and other people in prefs in descending order of scores
     scores = [(similarity(prefs, person, other), other)
               for other in prefs if other != person]
