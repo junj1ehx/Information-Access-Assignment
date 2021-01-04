@@ -65,7 +65,7 @@ def sim_distance(prefs, p1, p2):
     sum_of_squares = sum([pow(p1_tech[item] - p2_tech[item], 2)
                           for item in range(len(p1_tech))])
 
-    return sum_of_squares
+    return sqrt(sum_of_squares)
 
 
 # Returns the Pearson correlation coefficient for p1 and p2
